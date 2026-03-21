@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upper Body Workout</title>
+  <meta name="description" content="Track your workout progress efficiently.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="./icons/icon-192x192.png">
+</head>
+<body>
+  <div class="background-decor blob-1"></div>
+  <div class="background-decor blob-2"></div>
+  
+  <header>
+    <div class="header-content">
+      <h1>Upper Body Workout</h1>
+      <p class="subtitle">Complete your sets to see progress.</p>
+    </div>
+    <div class="progress-ring-container">
+      <svg class="progress-ring" width="60" height="60">
+        <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.1)" stroke-width="4" fill="transparent" r="26" cx="30" cy="30"/>
+        <circle id="progress-circle" class="progress-ring-circle" stroke="#00e5ff" stroke-width="4" fill="transparent" r="26" cx="30" cy="30"/>
+      </svg>
+      <span id="progress-text">0%</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="progress-bar-container">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
+    <div id="exercise-list"></div>
+    <div class="actions">
+      <button id="reset-btn" class="glass-btn">Reset Workout</button>
+    </div>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+:root {
+  --bg-color: #0b0c10;
+  --surface-color: rgba(31, 33, 42, 0.6);
+  --surface-border: rgba(255, 255, 255, 0.08);
+  --primary: #00e5ff;
+  --primary-glow: rgba(0, 229, 255, 0.4);
+  --text-primary: #ffffff;
+  --text-secondary: #9ba1b0;
+  --success: #2eeb7c;
+  --transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  padding-bottom: 2rem;
+}
+
+/* Background Gradients */
+.background-decor {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: -1;
+  opacity: 0.5;
+  animation: float 20s infinite ease-in-out alternate;
+}
+
+.blob-1 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+  top: -100px;
+  left: -100px;
+}
+
+.blob-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(138, 43, 226, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+  bottom: -200px;
+  right: -100px;
+  animation-delay: -5s;
+}
+
+@keyframes float {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(50px, 50px); }
+}
+
+header {
+  padding: 3rem 1.5rem 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  margin-bottom: 0.25rem;
+  background: linear-gradient(90deg, #fff, var(--primary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* Progress Ring */
+.progress-ring-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress-ring-circle {
+  stroke-dasharray: 164; /* 2 * pi * 26 */
+  stroke-dashoffset: 164;
+  transition: stroke-dashoffset 0.8s ease-out;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  stroke-linecap: round;
+}
+
+#progress-text {
+  position: absolute;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Main Container */
+main {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Linear Progress Bar at top of list */
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background: var(--surface-border);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00e5ff, #0066ff);
+  border-radius: 8px;
+  transition: width 0.8s ease-out;
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+/* Exercise Cards */
+.exercise-card {
+  background: var(--surface-color);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+/* Optional hover scale that feels responsive but doesn't distract aggressively */
+.exercise-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.exercise-header {
+  margin-bottom: 1rem;
+}
+
+.exercise-title {
+  font-size: 1.15rem;
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.exercise-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+}
+
+/* Active status indicator */
+.status-badge {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  background: rgba(46, 235, 124, 0.1);
+  color: var(--success);
+  font-weight: 600;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all var(--transition);
+}
+
+.exercise-card.completed .status-badge {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.exercise-card.completed {
+  border-color: rgba(46, 235, 124, 0.3);
+  box-shadow: 0 0 15px rgba(46, 235, 124, 0.05);
+}
+
+/* Sets System */
+.sets-container {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.set-checkbox {
+  appearance: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 2px solid var(--surface-border);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.set-checkbox:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.set-checkbox::before {
+  content: counter(set-counter);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all var(--transition);
+}
+
+/* Setup counter for visual numbers inside boxes */
+.sets-container {
+  counter-reset: set-counter;
+}
+.set-checkbox {
+  counter-increment: set-counter;
+}
+
+/* Checked State */
+.set-checkbox:checked {
+  background: linear-gradient(135deg, var(--success), #17b358);
+  border-color: transparent;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(46, 235, 124, 0.3);
+}
+
+.set-checkbox:checked::before {
+  content: '✓';
+  color: #0b0c10;
+  font-size: 1.2rem;
+  animation: punchIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes punchIn {
+  0% { transform: scale(0.5) rotate(-15deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+/* Micro-interaction on click down */
+.set-checkbox:active {
+  transform: scale(0.95);
+}
+
+/* Button & Actions */
+.actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.glass-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  border: 1px solid var(--surface-border);
+  padding: 0.75rem 1.5rem;
+  border-radius: 20px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all var(--transition);
+}
+
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.glass-btn:active {
+  transform: scale(0.95);
+}
+
+/* Responsive adjustment */
+@media (max-width: 480px) {
+  header { padding: 2rem 1rem 1.5rem; }
+  main { padding: 0 1rem; }
+  .set-checkbox { width: 38px; height: 38px; }
+}
