@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upper Body Workout</title>
+  <title>Workout Tracker</title>
   <meta name="description" content="Track your workout progress efficiently.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,30 +16,77 @@
 <body>
   <div class="background-decor blob-1"></div>
   <div class="background-decor blob-2"></div>
-  
-  <header>
-    <div class="header-content">
-      <h1>Upper Body Workout</h1>
-      <p class="subtitle">Complete your sets to see progress.</p>
-    </div>
-    <div class="progress-ring-container">
-      <svg class="progress-ring" width="60" height="60">
-        <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.1)" stroke-width="4" fill="transparent" r="26" cx="30" cy="30"/>
-        <circle id="progress-circle" class="progress-ring-circle" stroke="#00e5ff" stroke-width="4" fill="transparent" r="26" cx="30" cy="30"/>
-      </svg>
-      <span id="progress-text">0%</span>
-    </div>
-  </header>
 
-  <main>
-    <div class="progress-bar-container">
-      <div id="progress-bar" class="progress-bar"></div>
+  <!-- MENU VIEW -->
+  <div id="view-menu" class="view">
+    <div class="center-content">
+      <div class="header-content text-center mb-2">
+        <h1>Workout Tracker</h1>
+        <p class="subtitle">Select an option to begin</p>
+      </div>
+      <div class="menu-actions flex-col">
+        <button id="btn-workouts" class="glass-btn primary-btn large-btn">Start Workout</button>
+        <button id="btn-history" class="glass-btn large-btn">History</button>
+      </div>
     </div>
-    <div id="exercise-list"></div>
-    <div class="actions">
-      <button id="reset-btn" class="glass-btn">Reset Workout</button>
+  </div>
+
+  <!-- SELECTION VIEW -->
+  <div id="view-selection" class="view hidden">
+    <div class="center-content">
+      <div class="header-content text-center mb-2">
+        <h1>Choose Plan</h1>
+      </div>
+      <div class="menu-actions flex-col">
+        <button class="glass-btn primary-btn large-btn btn-workout-select" data-workout="upper">Upper Body Workout</button>
+        <button class="glass-btn secondary-btn large-btn btn-workout-select" data-workout="lower">Lower Body Workout</button>
+        <button class="glass-btn large-btn nav-back mt-1" data-target="view-menu">Back to Menu</button>
+      </div>
     </div>
-  </main>
+  </div>
+
+  <!-- WORKOUT VIEW -->
+  <div id="view-workout" class="view hidden">
+    <header>
+      <div class="header-content">
+        <h1 id="workout-title">Workout</h1>
+        <p class="subtitle">Complete your sets to see progress.</p>
+      </div>
+      <div class="progress-ring-container">
+        <svg class="progress-ring" width="60" height="60">
+          <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.1)" stroke-width="4" fill="transparent" r="26" cx="30" cy="30"/>
+          <circle id="progress-circle" class="progress-ring-circle" stroke="#00e5ff" stroke-width="4" fill="transparent" r="26" cx="30" cy="30"/>
+        </svg>
+        <span id="progress-text">0%</span>
+      </div>
+    </header>
+
+    <main>
+      <div class="progress-bar-container">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+      <div id="exercise-list"></div>
+      <div class="actions bottom-actions">
+        <button id="finish-btn" class="glass-btn finish-btn hidden">Finish Workout</button>
+        <button id="reset-btn" class="glass-btn">Reset</button>
+        <button class="glass-btn nav-back" data-target="view-selection">Change Workout</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- HISTORY VIEW -->
+  <div id="view-history" class="view hidden">
+    <div class="center-content history-container">
+      <div class="header-content text-center mb-2">
+        <h1>History</h1>
+      </div>
+      <div id="history-list" class="history-list"></div>
+      <div class="actions bottom-actions">
+        <button class="glass-btn nav-back" data-target="view-menu">Back</button>
+        <button id="clear-history-btn" class="glass-btn danger-btn">Clear</button>
+      </div>
+    </div>
+  </div>
 
   <script src="./app.js"></script>
 </body>
