@@ -153,14 +153,56 @@ function renderExercises() {
     const setsContainer = document.createElement('div');
     setsContainer.className = 'sets-container';
     
+    setsContainer.innerHTML = `
+      <div class="set-header-row">
+        <span>Set</span>
+        <span>Lbs</span>
+        <span>Reps</span>
+        <span>Done</span>
+      </div>
+    `;
+
     for (let i = 0; i < ex.sets; i++) {
+      const setRow = document.createElement('div');
+      setRow.className = 'set-row';
+
+      const setNum = document.createElement('span');
+      setNum.className = 'set-number';
+      setNum.innerText = i + 1;
+
+      const weightInput = document.createElement('input');
+      weightInput.type = 'number';
+      weightInput.inputMode = 'decimal';
+      weightInput.pattern = '[0-9]*';
+      weightInput.className = 'set-input weight-input';
+      weightInput.placeholder = '0';
+      weightInput.dataset.exercise = ex.id;
+      weightInput.dataset.setIndex = i;
+      weightInput.addEventListener('change', saveProgress);
+
+      const repsInput = document.createElement('input');
+      repsInput.type = 'number';
+      repsInput.inputMode = 'numeric';
+      repsInput.pattern = '[0-9]*';
+      repsInput.className = 'set-input reps-input';
+      repsInput.placeholder = '0';
+      repsInput.dataset.exercise = ex.id;
+      repsInput.dataset.setIndex = i;
+      repsInput.addEventListener('change', saveProgress);
+
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
       checkbox.className = 'set-checkbox';
       checkbox.dataset.exercise = ex.id;
       checkbox.dataset.setIndex = i;
       checkbox.addEventListener('change', handleSetChange);
-      setsContainer.appendChild(checkbox);
+
+      setRow.appendChild(setNum);
+      setRow.appendChild(weightInput);
+      setRow.appendChild(repsInput);
+      setRow.appendChild(checkbox);
+      
+      setsContainer.appendChild(setRow);
     }
 
     card.appendChild(header);
@@ -214,8 +256,14 @@ function checkFinishButton() {
 }
 
 function saveProgress() {
-  const checkboxes = document.querySelectorAll('.set-checkbox');
-  const state = Array.from(checkboxes).map(cb => cb.checked);
+  const state = [];
+  document.querySelectorAll('.set-row').forEach(row => {
+    state.push({
+      checked: row.querySelector('.set-checkbox').checked,
+      weight: row.querySelector('.weight-input').value,
+      reps: row.querySelector('.reps-input').value
+    });
+  });
   localStorage.setItem('workoutProgress', JSON.stringify({ state, count: checkedSetsCount }));
 }
 
@@ -224,10 +272,15 @@ function loadProgress() {
   if (saved) {
     try {
       const data = JSON.parse(saved);
-      const checkboxes = document.querySelectorAll('.set-checkbox');
+      const rows = document.querySelectorAll('.set-row');
       
-      data.state.forEach((isChecked, i) => {
-        if (checkboxes[i]) checkboxes[i].checked = isChecked;
+      data.state.forEach((setObj, i) => {
+        if (rows[i]) {
+          const isObj = typeof setObj === 'object' && setObj !== null;
+          rows[i].querySelector('.set-checkbox').checked = isObj ? setObj.checked : setObj;
+          if (isObj && setObj.weight) rows[i].querySelector('.weight-input').value = setObj.weight;
+          if (isObj && setObj.reps) rows[i].querySelector('.reps-input').value = setObj.reps;
+        }
       });
       
       checkedSetsCount = data.count || 0;
@@ -240,15 +293,39 @@ function loadProgress() {
   }
 }
 
+function downloadCSV(csvContent, filename) {
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 function finishWorkout() {
   const dateStr = new Date().toLocaleDateString(undefined, {
     weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
   });
   
+  let csvContent = "Exercise,Set,Weight,Reps\n";
+  document.querySelectorAll('.exercise-card').forEach(card => {
+    const exTitle = card.querySelector('.exercise-title span').innerText.replace(/,/g, '');
+    card.querySelectorAll('.set-row').forEach(row => {
+      const setNum = row.querySelector('.set-number').innerText;
+      const weight = row.querySelector('.weight-input').value || 0;
+      const reps = row.querySelector('.reps-input').value || 0;
+      csvContent += `${exTitle},${setNum},${weight},${reps}\n`;
+    });
+  });
+
   const entry = {
     date: dateStr,
     title: currentWorkoutData.title,
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    csv: csvContent
   };
   
   const hist = JSON.parse(localStorage.getItem('workoutHistory') || '[]');
@@ -258,7 +335,9 @@ function finishWorkout() {
   localStorage.removeItem('workoutProgress');
   localStorage.removeItem('currentSession');
   
-  alert('Workout Completed & Saved to History!');
+  downloadCSV(csvContent, `${currentWorkoutData.title.replace(/\s+/g, '_')}_${Date.now()}.csv`);
+  
+  alert('Workout Completed & CSV Downloaded! Saved to History.');
   showView('view-menu');
 }
 
@@ -267,11 +346,21 @@ function resetWorkoutConfirm() {
     localStorage.removeItem('workoutProgress');
     checkedSetsCount = 0;
     document.querySelectorAll('.set-checkbox').forEach(cb => cb.checked = false);
+    document.querySelectorAll('.weight-input').forEach(input => input.value = '');
+    document.querySelectorAll('.reps-input').forEach(input => input.value = '');
     document.querySelectorAll('.exercise-card').forEach(card => card.classList.remove('completed'));
     updateProgressUI();
     checkFinishButton();
   }
 }
+
+window.downloadPastCSV = function(timestamp) {
+  const hist = JSON.parse(localStorage.getItem('workoutHistory') || '[]');
+  const entry = hist.find(e => e.timestamp === timestamp);
+  if (entry && entry.csv) {
+    downloadCSV(entry.csv, `${entry.title.replace(/\s+/g, '_')}_${entry.timestamp}.csv`);
+  }
+};
 
 function renderHistory() {
   const container = document.getElementById('history-list');
@@ -283,9 +372,12 @@ function renderHistory() {
   }
   
   container.innerHTML = hist.map(item => `
-    <div class="history-item">
-      <div class="history-title">${item.title}</div>
-      <div class="history-date">${item.date}</div>
+    <div class="history-item flex-between">
+      <div>
+        <div class="history-title">${item.title}</div>
+        <div class="history-date">${item.date}</div>
+      </div>
+      ${item.csv ? `<button class="glass-btn dl-csv-btn" onclick="downloadPastCSV(${item.timestamp})">CSV</button>` : ''}
     </div>
   `).join('');
 }

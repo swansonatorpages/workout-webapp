@@ -197,15 +197,74 @@ main {
 /* Sets System */
 .sets-container {
   display: flex;
+  flex-direction: column;
   gap: 0.75rem;
   margin-top: 1rem;
 }
 
-.set-checkbox {
-  appearance: none;
-  width: 44px;
-  height: 44px;
+.set-header-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.set-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.5rem;
   border-radius: 12px;
+  border: 1px solid var(--surface-border);
+}
+
+.set-number {
+  color: var(--text-secondary);
+  font-weight: 600;
+  width: 24px;
+  text-align: center;
+}
+
+.set-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 8px;
+  width: 60px;
+  text-align: center;
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+  transition: all var(--transition);
+}
+
+.set-input:focus {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Hide spin buttons for numbers */
+.set-input::-webkit-outer-spin-button,
+.set-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.set-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.set-checkbox {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   border: 2px solid var(--surface-border);
   background: rgba(255, 255, 255, 0.03);
   cursor: pointer;
@@ -220,22 +279,6 @@ main {
 .set-checkbox:hover {
   border-color: rgba(255, 255, 255, 0.3);
   background: rgba(255, 255, 255, 0.1);
-}
-
-.set-checkbox::before {
-  content: counter(set-counter);
-  color: var(--text-secondary);
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all var(--transition);
-}
-
-/* Setup counter for visual numbers inside boxes */
-.sets-container {
-  counter-reset: set-counter;
-}
-.set-checkbox {
-  counter-increment: set-counter;
 }
 
 /* Checked State */
@@ -297,7 +340,8 @@ main {
 @media (max-width: 480px) {
   header { padding: 2rem 1rem 1.5rem; }
   main { padding: 0 1rem; }
-  .set-checkbox { width: 38px; height: 38px; }
+  .set-input { width: 50px; font-size: 0.9rem; }
+  .set-checkbox { width: 34px; height: 34px; }
 }
 
 /* --- Added Layout Styles for Multi-View Architecture --- */
@@ -404,6 +448,18 @@ main {
 .history-date {
   font-size: 0.85rem;
   color: var(--text-secondary);
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dl-csv-btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  border-radius: 10px;
 }
 
 .empty-state {
